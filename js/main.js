@@ -1,55 +1,31 @@
-// ============================================================
-// main.js - Точка входа в игру
-// ============================================================
+// Добавить обработчик кликов по картам в DOMContentLoaded:
 
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Clash Royale - Stage 1');
+// Обработка кликов по картам
+canvas.addEventListener('click', (e) => {
+    if (!core.gameState.isActive) return;
     
-    const canvas = document.getElementById('gameCanvas');
-    if (!canvas) {
-        console.error('❌ Canvas не найден!');
-        return;
-    }
-     // Установка размеров canvas
-    canvas.width = window.CONFIG.GAME.width;
-    canvas.height = window.CONFIG.GAME.height;
-    const ctx = canvas.getContext('2d');
-  
-     // Создание и запуск ядра игры
-    const core = new Core(canvas, ctx);
-    await core.init();
-  
-      // Глобальные объекты для доступа из консоли (для отладки)
-    window.gameCore = core;
-    window.gameState = core.gameState;
-    window.gameGraphics = core.graphics;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
     
-    console.log('🎮 Игра запущена!');
-  
-    SoundFX.init();
-    GameState.startBattle();
-    Core.startLoop();
+    const clickX = (e.clientX - rect.left) * scaleX;
+    const clickY = (e.clientY - rect.top) * scaleY;
     
-    function render() {
-        Graphics.drawArena();
-        Graphics.drawPlayerLeftTower();
-        Graphics.drawPlayerRightTower();
-        Graphics.drawEnemyLeftTower();
-        Graphics.drawEnemyRightTower();
-        Graphics.drawKingTower(true);
-        Graphics.drawKingTower(false);
-        
-        const units = GameState.getUnits();
-        for (let i = 0; i < units.length; i++) {
-            Graphics.drawUnit(units[i]);
+    // Проверяем клик по картам
+    const cardAreas = core.graphics.getCardAreas();
+    for (let area of cardAreas) {
+        if (clickX >= area.x && clickX <= area.x + area.width &&
+            clickY >= area.y && clickY <= area.y + area.height) {
+            // Клик по карте
+            core.ui.handleCardClick(area.index, area.card);
+            e.stopPropagation();
+            return;
         }
-        
-        Graphics.drawUI();
-        requestAnimationFrame(render);
     }
     
-    render();
-    console.log('Stage 3: Complete Clash Royale with lanes, towers, and sounds!');
-})
-    
-
+    // Если не кликнули по карте, передаем в UI для размещения
+    // UI сам проверит режим размещения
+    const fakeEvent = { clientX: e.clientX, clientY: e.clientY };
+    const fakeMouseEvent = new MouseEvent('click', fakeEvent);
+    canvas.dispatchEvent(fakeMouseEvent);
+});
