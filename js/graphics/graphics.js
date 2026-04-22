@@ -222,3 +222,25 @@
 }
 
 window.Graphics = null;
+
+// После отрисовки карт в руке, добавить:
+if (deck && deck.allCards && deck.allCards.length > 0) {
+    const nextCard = deck.allCards[0];
+    const nextCardX = window.CONFIG.GAME.width - 90;
+    const nextCardY = window.CONFIG.GAME.height - 100;
+    
+    this.ctx.fillStyle = '#333';
+    this.ctx.fillRect(nextCardX - 3, nextCardY - 3, 76, 96);
+    this.ctx.fillStyle = '#1a1a2e';
+    this.ctx.fillRect(nextCardX, nextCardY, 70, 90);
+    
+    this.drawImage(nextCard.unitType || nextCard.spellType, nextCardX + 20, nextCardY + 15, 30, 30);
+    
+    this.ctx.fillStyle = '#aaa';
+    this.ctx.font = 'bold 16px monospace';
+    this.ctx.fillText(`⚡${nextCard.cost}`, nextCardX + 5, nextCardY + 25);
+    
+    this.ctx.fillStyle = '#888';
+    this.ctx.font = '10px monospace';
+    this.ctx.fillText('Следующая', nextCardX + 5, nextCardY + 80);
+}
