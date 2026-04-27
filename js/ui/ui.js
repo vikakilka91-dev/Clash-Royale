@@ -1,4 +1,4 @@
-// ============================================================
+/// ============================================================
 // ui.js - Обработка пользовательского ввода (ОБНОВЛЕНО)
 // ============================================================
 
@@ -32,6 +32,9 @@ class UI {
             if (canvasY > window.CONFIG.GAME.height / 2) {
                 this.deployAtPosition(canvasX, canvasY);
             }
+
+            if (window.SoundFX) window.SoundFX.playCardSelect();
+
         });
         
         // Убираем старую обработку цифр, теперь выбор через клик по картам
@@ -50,6 +53,9 @@ class UI {
                 window.Effects.screenFlash('255,0,0', 0.2);
             }
             return;
+
+            if (window.SoundFX) window.SoundFX.playInsufficientElixir();
+            
         }
         
         // Выбираем карту и активируем режим размещения
