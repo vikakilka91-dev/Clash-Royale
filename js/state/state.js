@@ -94,7 +94,11 @@ class GameState {
         
         if (tower.hp <= 0) {
             console.log(`🏰 Башня ${tower.side} ${tower.position} разрушена!`);
+
+            if (window.SoundFX) window.SoundFX.playTowerDestroyed();
         }
+
+
         
         return tower.hp <= 0;
     }
