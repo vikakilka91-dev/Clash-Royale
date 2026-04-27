@@ -134,6 +134,8 @@ class Unit {
         
         if (window.SoundFX) window.SoundFX.playHit();
         console.log(`⚔️ ${this.type} атакует ${this.targetType} на ${this.damage} урона`);
+
+        if (window.SoundFX) window.SoundFX.playHit();
     }
     
     moveToTarget() {
